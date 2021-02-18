@@ -30,9 +30,9 @@ namespace WebApplication5.Controllers
 
             var top10model = model.Countries.ToList();
 
-            var top10 = top10model.OrderByDescending(o => o.TotalConfirmed).Take(10);
+            var top10 = top10model.OrderByDescending(o => (o.TotalConfirmed - o.TotalRecovered)).Take(10);
 
-            ViewBag.top10 = top10.ToList();
+            //ViewBag.top10 = top10.ToList();
 
 
             //return Json(model, JsonRequestBehavior.AllowGet);
@@ -61,9 +61,9 @@ namespace WebApplication5.Controllers
             ViewBag.top10 = top10.ToList();
             
 
-            //return Json(model, JsonRequestBehavior.AllowGet);
+            return Json(model, JsonRequestBehavior.AllowGet);
 
-            return Redirect("Index");
+            //return Redirect("Index");
             
             //return new HttpStatusCodeResult(HttpStatusCode.InternalServerError, "Erro ao acessar a API.");
         }
