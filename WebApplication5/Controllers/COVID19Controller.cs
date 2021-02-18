@@ -19,38 +19,51 @@ namespace WebApplication5.Controllers
         // GET: COVID19
         public ActionResult Index()
         {
+            var json = "";
 
-           
-            return View();
+            using (WebClient wc = new WebClient())
+            {
+                json = wc.DownloadString("https://api.covid19api.com/summary").Replace("\\", "");
+            }
+
+            var model = Newtonsoft.Json.JsonConvert.DeserializeObject<FullRequest>(json);
+
+            var top10model = model.Countries.ToList();
+
+            var top10 = top10model.OrderByDescending(o => o.TotalConfirmed).Take(10);
+
+            ViewBag.top10 = top10.ToList();
+
+
+            //return Json(model, JsonRequestBehavior.AllowGet);
+
+
+            return View(top10);
         }
 
         [HttpGet]
         public ActionResult GetJson()
         {
-            // var stageId = GetStageFromSomewhere();
-            var queryString = $"https://api.covid19api.com/summary";
-            var response = httpClient.GetAsync(queryString);
-
-            var json = response.ToString();//.ReadAsStringAsync();
-
-            //var json = response.Result;
-
+            
+            var json = "";
+            
             using(WebClient wc = new WebClient())
             {
-                json = wc.DownloadString(queryString).Replace("\\","");
+                json = wc.DownloadString("https://api.covid19api.com/summary").Replace("\\","");
             }
 
                 var model = Newtonsoft.Json.JsonConvert.DeserializeObject<FullRequest>(json);
 
-            var teste = model.Countries.ToList();
-            foreach(var item in teste)
-            {
-                item.TotalConfirmed
-            }
-            return View("Index", teste.OrderBy(s ))
-
+            var top10model = model.Countries.ToList();
             
-                return Json(model, JsonRequestBehavior.AllowGet);
+            var top10 = top10model.OrderByDescending(o => o.TotalConfirmed).Take(10);
+
+            ViewBag.top10 = top10.ToList();
+            
+
+            //return Json(model, JsonRequestBehavior.AllowGet);
+
+            return Redirect("Index");
             
             //return new HttpStatusCodeResult(HttpStatusCode.InternalServerError, "Erro ao acessar a API.");
         }

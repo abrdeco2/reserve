@@ -1,8 +1,16 @@
-﻿@model WebApplication5.Controllers.Country
+﻿@model IEnumerable<WebApplication5.Controllers.Country>
 
 @{
     ViewBag.Title = "Index";
 }
 
 <h2>Index</h2>
+
+@foreach (var item in Model)
+{
+    <div>
+        @item.CountryCountry
+        <hr />
+    </div>
+}
 
